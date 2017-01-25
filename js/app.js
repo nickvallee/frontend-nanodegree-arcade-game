@@ -18,29 +18,38 @@ var Enemy = function(x, y) {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
 
-    var oneToNine = Math.floor((Math.random() * 3) + 1);
+    var oneToThree = Math.floor((Math.random() * 3) + 1);
 
-    /*var speedSlow = this.x + (50 * dt);
-    var speedMid = this.x = (100 * dt);
-    var speedFast = this.x = (200 * dt);*/
+    this.speed = (Math.floor((Math.random() * 250) + 1) * dt);
+
+//image changing
+
+    if(this.x <= 0) {
+        this.sprite = 'images/enemy-bug.png';
+    } else if (this.x >= 550) {
+        this.sprite = 'images/enemy-bug-reverse.png'
+    }
+
+//moving
 
     if(this.randomizer == 1) {
         if(this.x < 655) {
-            this.x = this.x + (100 * dt);
+            this.x = this.x + (this.speed);
         } else {
             this.x = -150;
-            this.randomizer = oneToNine;
+            this.randomizer = oneToThree;
         }
     } else if (this.randomizer == 2) {
         if(this.x > -150) {
-            this.x = this.x - (100 * dt);
+            this.x = this.x - (this.speed);
         } else {
             this.x = 655;
-            this.randomizer = oneToNine;
+            this.randomizer = oneToThree;
         }
     } else {
         this.x = this.x + Math.floor((Math.random() * 50) + 1);
-        this.randomizer = oneToNine;
+        this.randomizer = oneToThree;
+
     }
 
     // You should multiply any movement by the dt parameter
@@ -53,29 +62,63 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-/*
+// ROCK
+
+
 var Rock = function(x, y) {
-    Enemy.call(this, x, y);
+    // Variables applied to each of our instances go here,
+    // we've provided one for you to get started
+    // The image/sprite for our enemies, this uses
+    // a helper we've provided to easily load images
+    this.x = x;
+    this.y = y;
+    this.randomizer = Math.floor((Math.random() * 3) + 1);
+
+    //Math.floor((Math.random() * 9) + 1);
 
     this.sprite = 'images/Rock.png';
 };
 
-Rock.prototype = Object.create(Enemy.prototype);
-Rock.prototype.constructor = Rock;
+// Update the enemy's position, required method for game
+// Parameter: dt, a time delta between ticks
 Rock.prototype.update = function(dt) {
-    if(this.x >= 400) {
-       this.x = -150;
-    } else {
-       this.x = this.x + (100 * dt);
-    }
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-}; */
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
 
+    var oneToThree = Math.floor((Math.random() * 3) + 1);
+
+    this.speed = (Math.floor((Math.random() * 250) + 1) * dt);
+
+
+    if(this.randomizer == 1) {
+        if(this.x < 655) {
+            this.x = this.x + (this.speed);
+        } else {
+            this.x = -150;
+            this.randomizer = oneToThree;
+        }
+    } else if (this.randomizer == 2) {
+        if(this.x > -150) {
+            this.x = this.x - (this.speed);
+        } else {
+            this.x = 655;
+            this.randomizer = oneToThree;
+        }
+    } else {
+        this.x = this.x + Math.floor((Math.random() * 50) + 1);
+        this.randomizer = oneToThree;
+
+    }
+
+    // You should multiply any movement by the dt parameter
+    // which will ensure the game runs at the same speed for
+    // all computers.
+};
+
+// Draw the enemy on the screen, required method for game
+Rock.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+// END ROCK
 
 // Now write your own player class
 
