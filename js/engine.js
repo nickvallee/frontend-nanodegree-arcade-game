@@ -29,6 +29,15 @@ var Engine = (function(global) {
     canvas.height = 606;
     doc.body.appendChild(canvas);
 
+    //setting the style for the text on the canvas
+    ctx.font = "20pt Impact";
+    ctx.textAlign = "center";
+
+    ctx.fillStyle = "white";
+
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 2;
+
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
@@ -138,6 +147,12 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
+
+        ctx.fillText("Score: " + points, 50, 80);
+        ctx.strokeText("Score: " + points, 50, 80);
+
+        ctx.fillText("High Score: " + highScore, 75, 105);
+        ctx.strokeText("High Score: " + highScore, 75, 105);
 
         renderEntities();
     }

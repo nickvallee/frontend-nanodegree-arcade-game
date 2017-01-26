@@ -1,5 +1,18 @@
-// Enemies our player must avoid
+//GLOBAL VARIABLES //
 
+//increments each time player makes it to water
+var points = 0;
+
+var highScore = 0;
+
+//effects how often rocks fall.
+//Is global because it is used in Player() and Rock().
+
+var rockOccur = 5000;
+
+
+
+// Enemies our player must avoid
 var Enemy = function(x, y) {
 
     this.x = x;
@@ -20,12 +33,13 @@ Enemy.prototype.update = function(dt, playr) {
     //used to reset randomizer, so that sprite starts in different place each time
     var oneToThree = Math.floor((Math.random() * 3) + 1);
 
-    //randomizes sprite speed each time it restarts it's run
-    this.speed = (Math.floor((Math.random() * 250) + 1) * dt);
+    //speed is incremented each time player scores a point
+    this.speed = (100 + (25 * points)) * dt;
 
-//change direciton of Enemy sprite
+    //change direction of Enemy sprite
+    //according to direction of movement
 
-    if(this.x <= 0) {
+    if(this.x <= -100) {
         this.sprite = 'images/enemy-bug.png';
     } else if (this.x >= 550) {
         this.sprite = 'images/enemy-bug-reverse.png'
@@ -61,10 +75,17 @@ Enemy.prototype.render = function() {
 };
 
 Enemy.prototype.checkCollision = function(playr) {
-    if (playr.x < this.x + 75 &&
-        playr.x + 65 > this.x &&
+    if (playr.x < this.x + 65 &&
+        playr.x + 55 > this.x &&
         playr.y < this.y + 50 &&
         70 + playr.y > this.y) {
+
+
+        if(points > highScore) {
+            highScore = points;
+        }
+
+        points = 0;
         playr.reset();
     }
 };
@@ -89,7 +110,7 @@ var Rock = function(x, y) {
 // Parameter: dt, a time delta between ticks
 Rock.prototype.update = function(dt) {
     //Rock sometimes renders off screen, in order to fall occasionally in-game
-    var randomX = Math.floor((Math.random() * 1500) + 1);
+    var randomX = Math.floor((Math.random() * rockOccur) + 1);
 
     //this variable has no use ATM
     var oneToTen = Math.floor((Math.random() * 10) + 1);
@@ -130,10 +151,24 @@ var Player = function(x, y) {
 };
 
 Player.prototype.update = function(dt) {
-    playerPosition.x = this.x;
-    playerPosition.y = this.y;
 
-    console.log(playerPosition.x, playerPosition.y);
+    console.log(this.x, this.y);
+
+    if (this.y <= -10) {
+        points += 1;
+
+        if (rockOccur > 505) {
+        rockOccur -= 200;
+        }
+
+        for (var i = 0; i < allEnemies.length; i++) {
+            allEnemies[i].update.speed += 50;
+        }
+
+        console.log(enemy1.update.speed);
+
+        player.reset();
+    }
 };
 
 Player.prototype.render = function() {
