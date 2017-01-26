@@ -33,9 +33,10 @@ var Engine = (function(global) {
     ctx.font = "20pt Impact";
     ctx.textAlign = "center";
 
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "black";
+    ctx.fillRect(0,0, ctx.canvas.width, ctx.canvas.height);
 
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "white";
     ctx.lineWidth = 2;
 
     /* This function serves as the kickoff point for the game loop itself
