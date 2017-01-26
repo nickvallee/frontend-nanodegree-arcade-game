@@ -145,16 +145,32 @@ Player.prototype.handleInput = function(key) {
 
     switch (key) {
         case "left":
-            this.x -= 25;
+            if(this.x <= 0) {
+                this.x = 0;
+            } else {
+            this.x -= 30;
+            }
             break;
         case "right":
-            this.x += 25;
+            if(this.x >= 410) {
+                this.x = 410;
+            } else {
+            this.x += 30;
+            }
             break;
         case "up":
-            this.y -= 25;
+            if(this.y <= -20) {
+                this.y = -20;
+            } else {
+            this.y -= 30;
+            }
             break;
         case "down":
-            this.y += 25;
+            if(this.y >= 430) {
+                this.y = 430;
+            } else {
+            this.y += 30;
+            }
             break;
         default:
             console.log("no movement");
@@ -162,9 +178,9 @@ Player.prototype.handleInput = function(key) {
 };
 
 Player.prototype.reset = function () {
-    this.x == 200;
-    this.y == 400;
-    console.log("reset is passing");
+    this.x = 200;
+    this.y = 400;
+    console.log(this.x +  ", " + this.y );
 };
 
 
