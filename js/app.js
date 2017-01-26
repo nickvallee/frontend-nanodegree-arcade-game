@@ -1,28 +1,29 @@
 // Enemies our player must avoid
 
 var Enemy = function(x, y) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+
     this.x = x;
     this.y = y;
-    this.randomizer = Math.floor((Math.random() * 3) + 1);
 
-    //Math.floor((Math.random() * 9) + 1);
+    //establishes initial position, randomly
+    this.randomizer = Math.floor((Math.random() * 3) + 1);
 
     this.sprite = 'images/enemy-bug.png';
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
+Enemy.prototype.update = function(dt, playr) {
 
+    this.checkCollision(playr);
+
+    //used to reset randomizer, so that sprite starts in different place each time
     var oneToThree = Math.floor((Math.random() * 3) + 1);
 
+    //randomizes sprite speed each time it restarts it's run
     this.speed = (Math.floor((Math.random() * 250) + 1) * dt);
 
-//image changing
+//change direciton of Enemy sprite
 
     if(this.x <= 0) {
         this.sprite = 'images/enemy-bug.png';
@@ -30,7 +31,7 @@ Enemy.prototype.update = function(dt) {
         this.sprite = 'images/enemy-bug-reverse.png'
     }
 
-//moving
+//randomizes Enemy movement
 
     if(this.randomizer == 1) {
         if(this.x < 655) {
@@ -52,9 +53,6 @@ Enemy.prototype.update = function(dt) {
 
     }
 
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
 };
 
 // Draw the enemy on the screen, required method for game
@@ -62,17 +60,25 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+Enemy.prototype.checkCollision = function(playr) {
+    if (playr.x < this.x + 75 &&
+        playr.x + 65 > this.x &&
+        playr.y < this.y + 50 &&
+        70 + playr.y > this.y) {
+        playr.reset();
+    }
+};
+
 // ROCK
 
 
 var Rock = function(x, y) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+
     this.x = x;
     this.y = y;
-    this.randomizer = Math.floor((Math.random() * 3) + 1);
+
+    //determines starting position
+    this.randomX = Math.floor((Math.random() * 505) + 1);
 
     //Math.floor((Math.random() * 9) + 1);
 
@@ -82,35 +88,22 @@ var Rock = function(x, y) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Rock.prototype.update = function(dt) {
+    //Rock sometimes renders off screen, in order to fall occasionally in-game
+    var randomX = Math.floor((Math.random() * 1500) + 1);
 
-    var oneToThree = Math.floor((Math.random() * 3) + 1);
+    //this variable has no use ATM
+    var oneToTen = Math.floor((Math.random() * 10) + 1);
 
-    this.speed = (Math.floor((Math.random() * 250) + 1) * dt);
+    // variable for determing rock speed
+    this.speed = 250 * dt;
 
-
-    if(this.randomizer == 1) {
-        if(this.x < 655) {
-            this.x = this.x + (this.speed);
-        } else {
-            this.x = -150;
-            this.randomizer = oneToThree;
-        }
-    } else if (this.randomizer == 2) {
-        if(this.x > -150) {
-            this.x = this.x - (this.speed);
-        } else {
-            this.x = 655;
-            this.randomizer = oneToThree;
-        }
+    if(this.y < 210) {
+    this.y = this.y + (this.speed);
     } else {
-        this.x = this.x + Math.floor((Math.random() * 50) + 1);
-        this.randomizer = oneToThree;
-
+       this.y = -30;
+       this.x = randomX;
     }
 
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
 };
 
 // Draw the enemy on the screen, required method for game
@@ -118,9 +111,15 @@ Rock.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// END ROCK
+// END ROCK////////////////
 
 // Now write your own player class
+
+var playerPosition = {
+    "x": 0,
+    "y": 0
+}
+
 
 var Player = function(x, y) {
 
@@ -131,7 +130,10 @@ var Player = function(x, y) {
 };
 
 Player.prototype.update = function(dt) {
+    playerPosition.x = this.x;
+    playerPosition.y = this.y;
 
+    console.log(playerPosition.x, playerPosition.y);
 };
 
 Player.prototype.render = function() {
@@ -139,10 +141,31 @@ Player.prototype.render = function() {
 };
 
 Player.prototype.handleInput = function(key) {
+    console.log(key);
+
+    switch (key) {
+        case "left":
+            this.x -= 25;
+            break;
+        case "right":
+            this.x += 25;
+            break;
+        case "up":
+            this.y -= 25;
+            break;
+        case "down":
+            this.y += 25;
+            break;
+        default:
+            console.log("no movement");
+    }
 };
 
-// This class requires an update(), render() and
-// a handleInput() method.
+Player.prototype.reset = function () {
+    this.x == 200;
+    this.y == 400;
+    console.log("reset is passing");
+};
 
 
 // Now instantiate your objects.
@@ -153,7 +176,10 @@ var enemy3 = new Enemy (-150, 225);
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [enemy1, enemy2, enemy3];
 
+var rock1 = new Rock (100, 0);
 
+
+var allRocks = [rock1];
 // Place the player object in a variable called player
 
 var player = new Player(200, 400);
@@ -171,6 +197,5 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-/// CLICK LOCATION ////
 
 
