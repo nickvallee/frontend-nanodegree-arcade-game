@@ -28,6 +28,8 @@ var Enemy = function(x, y) {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt, playr) {
 
+    //sees if enemy is in similar coordinates to player
+    //and restarts game if true
     this.checkCollision(playr);
 
     //used to reset randomizer, so that sprite starts in different place each time
@@ -99,7 +101,7 @@ var Rock = function(x, y) {
     this.y = y;
 
     //determines starting position
-    this.randomX = Math.floor((Math.random() * 505) + 1);
+    this.randomX = Math.floor((Math.random() * rockOccur) + 1);
 
     //Math.floor((Math.random() * 9) + 1);
 
@@ -108,7 +110,12 @@ var Rock = function(x, y) {
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Rock.prototype.update = function(dt) {
+Rock.prototype.update = function(dt, playr) {
+
+    //sees if rock is in similar coordinates to player
+    //and restarts game if true
+    this.checkCollision(playr);
+
     //Rock sometimes renders off screen, in order to fall occasionally in-game
     var randomX = Math.floor((Math.random() * rockOccur) + 1);
 
@@ -121,7 +128,7 @@ Rock.prototype.update = function(dt) {
     if(this.y < 210) {
     this.y = this.y + (this.speed);
     } else {
-       this.y = -30;
+       this.y = 0;
        this.x = randomX;
     }
 
@@ -131,6 +138,22 @@ Rock.prototype.update = function(dt) {
 Rock.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
+Rock.prototype.checkCollision = function(playr) {
+    if (playr.x < this.x + 65 &&
+        playr.x + 55 > this.x &&
+        playr.y < this.y + 50 &&
+        70 + playr.y > this.y) {
+
+
+        if(points > highScore) {
+            highScore = points;
+        }
+
+        points = 0;
+        playr.reset();
+    }
+}
 
 // END ROCK////////////////
 
@@ -219,20 +242,20 @@ Player.prototype.reset = function () {
 };
 
 
-// Now instantiate your objects.
-
 var enemy1 = new Enemy(-150, 50);
 var enemy2 = new Enemy(-150, 140);
 var enemy3 = new Enemy (-150, 225);
+
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [enemy1, enemy2, enemy3];
 
+
 var rock1 = new Rock (100, 0);
 
-
+//rocks are kept in an array in case I want to add more later
 var allRocks = [rock1];
-// Place the player object in a variable called player
 
+// Place the player object in a variable called player
 var player = new Player(200, 400);
 
 // This listens for key presses and sends the keys to your

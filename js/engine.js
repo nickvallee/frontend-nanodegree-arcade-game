@@ -33,10 +33,10 @@ var Engine = (function(global) {
     ctx.font = "20pt Impact";
     ctx.textAlign = "center";
 
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "white";
     ctx.fillRect(0,0, ctx.canvas.width, ctx.canvas.height);
 
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = "black";
     ctx.lineWidth = 2;
 
     /* This function serves as the kickoff point for the game loop itself
@@ -105,7 +105,7 @@ var Engine = (function(global) {
             enemy.update(dt, player);
         });
         allRocks.forEach(function(rock) {
-            rock.update(dt);
+            rock.update(dt, player);
         });
         player.update();
     }
