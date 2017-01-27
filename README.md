@@ -1,3 +1,20 @@
+#Nick's Arcade Game Clone
+
+Welcome to my arcade game! In this document I will describe the game mechanics I have implemented so far. I intend to add more to the game over time, including more **animations**, **new items** to pick up (_speed booster_, for example), and some prompts for when you score a point or die.
+
+##How To Play
+
+The goal of the game is the get the highest score possible before you run out of lives. Acquire points by moving onto the water squares at the top.
+
+You are the little grey haired girl on the bottom of the screen. Use the directional arrows on your keyboard to move her around.
+
+If you are hit by a **bug** or a **rock**, you will lose a **Life**. If you have no more **lives** when you get hit, your score will reset to 0 and the game is started.
+
+pick up a **Heart**, and it will give you +1 life.
+
+Have fun!
+
+
 frontend-nanodegree-arcade-game
 ===============================
 

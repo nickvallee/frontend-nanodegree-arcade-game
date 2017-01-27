@@ -13,7 +13,6 @@
  * the canvas' context (ctx) object globally available to make writing app.js
  * a little simpler to work with.
  */
-
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -34,7 +33,7 @@ var Engine = (function(global) {
     ctx.textAlign = "center";
 
     ctx.fillStyle = "white";
-    ctx.fillRect(0,0, ctx.canvas.width, ctx.canvas.height);
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ctx.strokeStyle = "black";
     ctx.lineWidth = 2;
@@ -107,6 +106,9 @@ var Engine = (function(global) {
         allRocks.forEach(function(rock) {
             rock.update(dt, player);
         });
+
+        life.update(dt, player);
+
         player.update();
     }
 
@@ -121,12 +123,12 @@ var Engine = (function(global) {
          * for that particular row of the game level.
          */
         var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
+                'images/water-block.png', // Top row is water
+                'images/stone-block.png', // Row 1 of 3 of stone
+                'images/stone-block.png', // Row 2 of 3 of stone
+                'images/stone-block.png', // Row 3 of 3 of stone
+                'images/grass-block.png', // Row 1 of 2 of grass
+                'images/grass-block.png' // Row 2 of 2 of grass
             ],
             numRows = 6,
             numCols = 5,
@@ -149,11 +151,14 @@ var Engine = (function(global) {
             }
         }
 
-        ctx.fillText("Score: " + points, 50, 80);
-        ctx.strokeText("Score: " + points, 50, 80);
+        ctx.fillText("Score: " + score, 50, 80);
+        ctx.strokeText("Score: " + score, 50, 80);
 
         ctx.fillText("High Score: " + highScore, 75, 105);
         ctx.strokeText("High Score: " + highScore, 75, 105);
+
+        ctx.fillText("Lives: " + life.numberOfLives, 43, 130);
+        ctx.strokeText("Lives: " + life.numberOfLives, 43, 130);
 
         renderEntities();
     }
@@ -172,6 +177,8 @@ var Engine = (function(global) {
         allRocks.forEach(function(rock) {
             rock.render();
         });
+
+        life.render();
 
 
         player.render();
@@ -197,7 +204,8 @@ var Engine = (function(global) {
         'images/enemy-bug-reverse.png',
         'images/char-boy.png',
         'images/char-horn-girl.png',
-        'images/Rock.png'
+        'images/Rock.png',
+        'images/Heart.png'
     ]);
     Resources.onReady(init);
 

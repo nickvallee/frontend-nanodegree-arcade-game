@@ -1,16 +1,13 @@
-//GLOBAL VARIABLES //
-
 //increments each time player makes it to water
-var points = 0;
+var score = 0;
 
 var highScore = 0;
 
 //effects how often rocks fall.
-//Is global because it is used in Player() and Rock().
-
+//Is a global variable because it is used in Player() and Rock().
 var rockOccur = 5000;
 
-
+//determines if heart is moving up or down
 
 // Enemies our player must avoid
 var Enemy = function(x, y) {
@@ -36,28 +33,28 @@ Enemy.prototype.update = function(dt, playr) {
     var oneToThree = Math.floor((Math.random() * 3) + 1);
 
     //speed is incremented each time player scores a point
-    this.speed = (100 + (25 * points)) * dt;
+    this.speed = (100 + (25 * score)) * dt;
 
     //change direction of Enemy sprite
     //according to direction of movement
 
-    if(this.x <= -100) {
+    if (this.x <= -100) {
         this.sprite = 'images/enemy-bug.png';
     } else if (this.x >= 550) {
-        this.sprite = 'images/enemy-bug-reverse.png'
+        this.sprite = 'images/enemy-bug-reverse.png';
     }
 
-//randomizes Enemy movement
+    //randomizes Enemy movement
 
-    if(this.randomizer == 1) {
-        if(this.x < 655) {
+    if (this.randomizer == 1) {
+        if (this.x < 655) {
             this.x = this.x + (this.speed);
         } else {
             this.x = -150;
             this.randomizer = oneToThree;
         }
     } else if (this.randomizer == 2) {
-        if(this.x > -150) {
+        if (this.x > -150) {
             this.x = this.x - (this.speed);
         } else {
             this.x = 655;
@@ -76,6 +73,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//restarts game if collision occurs
 Enemy.prototype.checkCollision = function(playr) {
     if (playr.x < this.x + 65 &&
         playr.x + 55 > this.x &&
@@ -83,17 +81,18 @@ Enemy.prototype.checkCollision = function(playr) {
         70 + playr.y > this.y) {
 
 
-        if(points > highScore) {
-            highScore = points;
+        if (life.numberOfLives < 1) {
+            if (score > highScore) {
+                highScore = score;
+            }
+            score = 0;
+        } else {
+            life.numberOfLives -= 1;
         }
 
-        points = 0;
         playr.reset();
     }
 };
-
-// ROCK
-
 
 var Rock = function(x, y) {
 
@@ -102,8 +101,6 @@ var Rock = function(x, y) {
 
     //determines starting position
     this.randomX = Math.floor((Math.random() * rockOccur) + 1);
-
-    //Math.floor((Math.random() * 9) + 1);
 
     this.sprite = 'images/Rock.png';
 };
@@ -119,17 +116,14 @@ Rock.prototype.update = function(dt, playr) {
     //Rock sometimes renders off screen, in order to fall occasionally in-game
     var randomX = Math.floor((Math.random() * rockOccur) + 1);
 
-    //this variable has no use ATM
-    var oneToTen = Math.floor((Math.random() * 10) + 1);
-
     // variable for determing rock speed
     this.speed = 250 * dt;
 
-    if(this.y < 210) {
-    this.y = this.y + (this.speed);
+    if (this.y < 210) {
+        this.y = this.y + (this.speed);
     } else {
-       this.y = 0;
-       this.x = randomX;
+        this.y = 0;
+        this.x = randomX;
     }
 
 };
@@ -139,6 +133,7 @@ Rock.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//restarts game if collision occurs
 Rock.prototype.checkCollision = function(playr) {
     if (playr.x < this.x + 65 &&
         playr.x + 55 > this.x &&
@@ -146,23 +141,19 @@ Rock.prototype.checkCollision = function(playr) {
         70 + playr.y > this.y) {
 
 
-        if(points > highScore) {
-            highScore = points;
+        if (life.numberOfLives < 1) {
+            if (score > highScore) {
+                highScore = score;
+            }
+            score = 0;
+        } else {
+            life.numberOfLives -= 1;
         }
 
-        points = 0;
         playr.reset();
     }
-}
+};
 
-// END ROCK////////////////
-
-// Now write your own player class
-
-var playerPosition = {
-    "x": 0,
-    "y": 0
-}
 
 
 var Player = function(x, y) {
@@ -175,20 +166,18 @@ var Player = function(x, y) {
 
 Player.prototype.update = function(dt) {
 
-    console.log(this.x, this.y);
-
     if (this.y <= -10) {
-        points += 1;
+        score += 1;
+        life.x = Math.floor((Math.random() * 2000) + 1);
+        life.y = Math.floor((Math.random() * 250) + 1);
 
         if (rockOccur > 505) {
-        rockOccur -= 200;
+            rockOccur -= 200;
         }
 
         for (var i = 0; i < allEnemies.length; i++) {
             allEnemies[i].update.speed += 50;
         }
-
-        console.log(enemy1.update.speed);
 
         player.reset();
     }
@@ -203,31 +192,31 @@ Player.prototype.handleInput = function(key) {
 
     switch (key) {
         case "left":
-            if(this.x <= 0) {
+            if (this.x <= 0) {
                 this.x = 0;
             } else {
-            this.x -= 30;
+                this.x -= 30;
             }
             break;
         case "right":
-            if(this.x >= 410) {
+            if (this.x >= 410) {
                 this.x = 410;
             } else {
-            this.x += 30;
+                this.x += 30;
             }
             break;
         case "up":
-            if(this.y <= -20) {
+            if (this.y <= -20) {
                 this.y = -20;
             } else {
-            this.y -= 30;
+                this.y -= 30;
             }
             break;
         case "down":
-            if(this.y >= 430) {
+            if (this.y >= 430) {
                 this.y = 430;
             } else {
-            this.y += 30;
+                this.y += 30;
             }
             break;
         default:
@@ -235,28 +224,83 @@ Player.prototype.handleInput = function(key) {
     }
 };
 
-Player.prototype.reset = function () {
+Player.prototype.reset = function() {
     this.x = 200;
     this.y = 400;
-    console.log(this.x +  ", " + this.y );
+    console.log(this.x + ", " + this.y);
 };
 
+///HEART
 
+var Life = function(x, y) {
+
+    this.sprite = 'images/Heart.png';
+    this.x = x;
+    this.y = y;
+    this.numberOfLives = 0;
+    this.moveUpCounter = 0;
+    this.moveDownCounter = 0;
+
+};
+
+Life.prototype.update = function(dt, playr) {
+    this.checkCollision(playr);
+
+    if (this.moveUpCounter < 15) {
+        this.moveDownCounter = 0;
+        this.y -= 70 * dt;
+        this.moveUpCounter += 1;
+    } else {
+        if (this.moveDownCounter < 15) {
+            this.y += 70 * dt;
+            this.moveDownCounter += 1;
+        } else {
+            this.moveUpCounter = 0;
+            this.moveDownCounter = 0;
+
+        }
+    }
+
+};
+
+Life.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Life.prototype.checkCollision = function(playr) {
+
+    //this block of code could be made once
+    if (playr.x < this.x + 65 &&
+        playr.x + 55 > this.x &&
+        playr.y < this.y + 50 &&
+        70 + playr.y > this.y) {
+
+        this.numberOfLives += 1;
+
+        this.x = Math.floor((Math.random() * 2000) + 1);
+        this.y = Math.floor((Math.random() * 250) + 1);
+    }
+};
+
+//all instances of enemies go here
 var enemy1 = new Enemy(-150, 50);
 var enemy2 = new Enemy(-150, 140);
-var enemy3 = new Enemy (-150, 225);
+var enemy3 = new Enemy(-150, 225);
 
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [enemy1, enemy2, enemy3];
 
-
-var rock1 = new Rock (100, 0);
+//all instances of rock go here
+var rock1 = new Rock(100, 0);
 
 //rocks are kept in an array in case I want to add more later
 var allRocks = [rock1];
 
 // Place the player object in a variable called player
 var player = new Player(200, 400);
+
+//Place instances of life here
+var life = new Life(200, 300);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -270,6 +314,3 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
-
-
