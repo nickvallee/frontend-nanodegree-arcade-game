@@ -2,6 +2,11 @@
 
 Welcome to my arcade game! In this document I will describe the game mechanics I have implemented so far. I intend to add more to the game over time, including more **animations**, **new items** to pick up (_speed booster_, for example), and some prompts for when you score a point or die.
 
+##How to Run
+
+For now, download the project and open up the index.html file in your broswer and it will start automatically.
+I put it up on Github pages soon, and it will be much easier to play.
+
 ##How To Play
 
 The goal of the game is the get the highest score possible before you run out of lives. Acquire points by moving onto the water squares at the top.

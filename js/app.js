@@ -9,17 +9,51 @@ var rockOccur = 5000;
 
 //determines if heart is moving up or down
 
-// Enemies our player must avoid
-var Enemy = function(x, y) {
+//Sprite Prototype
 
+var Sprite = function(x, y) {
     this.x = x;
     this.y = y;
 
+    this.sprite = 'images/Star.png';
+}
+
+Sprite.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
+
+Sprite.prototype.checkCollision = function(playr) {
+     if (playr.x < this.x + 65 &&
+        playr.x + 55 > this.x &&
+        playr.y < this.y + 50 &&
+        70 + playr.y > this.y) {
+
+
+        if (life.numberOfLives < 1) {
+            if (score > highScore) {
+                highScore = score;
+            }
+            score = 0;
+        } else {
+            life.numberOfLives -= 1;
+        }
+
+        playr.reset();
+    }
+
+}
+
+// Enemies our player must avoid
+var Enemy = function(x, y) {
+
+    Sprite.call(this, x, y);
     //establishes initial position, randomly
     this.randomizer = Math.floor((Math.random() * 3) + 1);
 
     this.sprite = 'images/enemy-bug.png';
 };
+
+Enemy.prototype = Object.create(Sprite.prototype);
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -69,41 +103,21 @@ Enemy.prototype.update = function(dt, playr) {
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
 
 //restarts game if collision occurs
-Enemy.prototype.checkCollision = function(playr) {
-    if (playr.x < this.x + 65 &&
-        playr.x + 55 > this.x &&
-        playr.y < this.y + 50 &&
-        70 + playr.y > this.y) {
 
-
-        if (life.numberOfLives < 1) {
-            if (score > highScore) {
-                highScore = score;
-            }
-            score = 0;
-        } else {
-            life.numberOfLives -= 1;
-        }
-
-        playr.reset();
-    }
-};
 
 var Rock = function(x, y) {
 
-    this.x = x;
-    this.y = y;
+    Sprite.call(this, x, y);
 
     //determines starting position
     this.randomX = Math.floor((Math.random() * rockOccur) + 1);
 
     this.sprite = 'images/Rock.png';
 };
+
+Rock.prototype = Object.create(Sprite.prototype);
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -129,40 +143,15 @@ Rock.prototype.update = function(dt, playr) {
 };
 
 // Draw the enemy on the screen, required method for game
-Rock.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-//restarts game if collision occurs
-Rock.prototype.checkCollision = function(playr) {
-    if (playr.x < this.x + 65 &&
-        playr.x + 55 > this.x &&
-        playr.y < this.y + 50 &&
-        70 + playr.y > this.y) {
-
-
-        if (life.numberOfLives < 1) {
-            if (score > highScore) {
-                highScore = score;
-            }
-            score = 0;
-        } else {
-            life.numberOfLives -= 1;
-        }
-
-        playr.reset();
-    }
-};
-
-
 
 var Player = function(x, y) {
 
+    Sprite.call(this, x, y);
     this.sprite = 'images/char-horn-girl.png';
-    this.x = x;
-    this.y = y;
 
 };
+
+Player.prototype = Object.create(Sprite.prototype);
 
 Player.prototype.update = function(dt) {
 
@@ -179,12 +168,8 @@ Player.prototype.update = function(dt) {
             allEnemies[i].update.speed += 50;
         }
 
-        player.reset();
+        this.reset();
     }
-};
-
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 Player.prototype.handleInput = function(key) {
@@ -234,18 +219,21 @@ Player.prototype.reset = function() {
 
 var Life = function(x, y) {
 
+    Sprite.call(this, x, y);
+
     this.sprite = 'images/Heart.png';
-    this.x = x;
-    this.y = y;
     this.numberOfLives = 0;
     this.moveUpCounter = 0;
     this.moveDownCounter = 0;
 
 };
 
+Life.prototype = Object.create(Sprite.prototype);
+
 Life.prototype.update = function(dt, playr) {
     this.checkCollision(playr);
 
+    //makes heart float up and down in place
     if (this.moveUpCounter < 15) {
         this.moveDownCounter = 0;
         this.y -= 70 * dt;
@@ -261,10 +249,6 @@ Life.prototype.update = function(dt, playr) {
         }
     }
 
-};
-
-Life.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 Life.prototype.checkCollision = function(playr) {
