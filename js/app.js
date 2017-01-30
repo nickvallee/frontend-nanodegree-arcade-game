@@ -23,7 +23,7 @@ Sprite.prototype.render = function() {
 }
 
 Sprite.prototype.checkCollision = function(playr) {
-     if (playr.x < this.x + 65 &&
+    if (playr.x < this.x + 65 &&
         playr.x + 55 > this.x &&
         playr.y < this.y + 50 &&
         70 + playr.y > this.y) {
